@@ -8,7 +8,7 @@ import 'package:chat_app/pages/usuarios_page.dart';
 
 final Map<String, Widget Function(BuildContext)> appRoutes = {
 
-  'usuarios': (_) => const UsuarioPage(),
+  'usuarios': (_) => UsuarioPage(),
   'chat': (_) => const ChatPage(),
   'login': (_) => const LoginPage(),
   'register': (_) => const RegisterPage(),
