@@ -52,8 +52,8 @@ class ChatMessage extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        padding: EdgeInsets.all(8.0),
-        margin: EdgeInsets.only(
+        padding: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.only(
           bottom: 5,
           left: 5,
           right: 50,

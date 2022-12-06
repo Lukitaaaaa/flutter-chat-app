@@ -19,7 +19,7 @@ class Logo extends StatelessWidget {
           children: <Widget>[
             Image(image: AssetImage('assets/tag-logo.png')),
             SizedBox( height: 20 ),
-            Text(titulo, style: TextStyle(fontSize: 30))
+            Text(titulo, style: TextStyle(fontSize: 26))
           ],
         ),
       ),

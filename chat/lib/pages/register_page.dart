@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:chat_app/helpers/mostrar_alerta.dart';
+
+import 'package:chat_app/services/auth_service.dart';
+
 import 'package:chat_app/widgets/logo.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/label.dart';
@@ -15,19 +21,22 @@ class RegisterPage extends StatelessWidget {
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: SafeArea(
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.9,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Logo(titulo: 'Register',),
-                
-                _Form(),
-                
-                Label(ruta: 'login', titulo: 'Ya tienes cuenta?', subtitulo: 'Ingresa ahora',),
-                
-                Text('Termino y condiciones de uso', style: TextStyle(fontWeight: FontWeight.w200)),
-              ],
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Logo(titulo: 'Register',),
+                  
+                  _Form(),
+                  
+                  Label(ruta: 'login', titulo: 'Ya tienes cuenta?', subtitulo: 'Ingresa ahora',),
+                  
+                  Text('Termino y condiciones de uso', style: TextStyle(fontWeight: FontWeight.w200)),
+                ],
+              ),
             ),
           ),
         ),
@@ -53,16 +62,20 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+
+    final authServices = Provider.of<AuthServices>(context);
+    
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
       child: Column(
-        children: <Widget>[
+        children: [
 
           CustomInput(
             icon: Icons.perm_identity,
             placeholder: 'Nombre',
-            textController: passCtrl,
+            keyboardType: TextInputType.text,
+            textController: nombreCtrl,
             
           ),
 
@@ -82,10 +95,26 @@ class __FormState extends State<_Form> {
           ),
 
           BotonIngresar(
-            text: 'Ingrese', 
-            onPressed: (){
-              print( emailCtrl.text );
-              print( passCtrl.text );
+            text: 'Crear cuenta', 
+            onPressed: authServices.autenticando 
+            ? () => {} 
+            : () async {
+
+
+
+              FocusScope.of(context).unfocus(); // Oculta el teclado
+
+              final registerOk = await authServices.register(nombreCtrl.text.trim(), emailCtrl.text.trim(), passCtrl.text.trim() );
+
+              if ( registerOk == true ) {
+                
+                Navigator.pushReplacementNamed(context, 'usuarios');
+              } else {
+                
+                mostrarAlerta(context, 'registro incorrecto', registerOk);
+
+              }           
+            
             }
           )
         ],
