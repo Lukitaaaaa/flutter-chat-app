@@ -1,3 +1,5 @@
+// FUNCIONES PARA LA AUTENTICACION DEL USUARIO Y LA CONFIGURACION DE SUS TOKENS
+
 // ignore_for_file: unnecessary_string_interpolations
 
 import 'dart:convert';
@@ -16,7 +18,6 @@ class AuthServices with ChangeNotifier{
   Usuario? usuario;
   bool _autenticando = false;
 
-  final _storage = FlutterSecureStorage();
 
   bool get autenticando => _autenticando;
   set autenticando (bool valor){
@@ -24,15 +25,16 @@ class AuthServices with ChangeNotifier{
     notifyListeners();
   }
 
+  final _storage = const FlutterSecureStorage(); // ALMACENAMIENTO DE TOKENS
   // Getters del token de forma estatica
 
-  static Future<String?> getToken() async {
+  static Future<String?> getToken() async { // OBTIENE EL TOKEN
     final _storage = FlutterSecureStorage();
     final token = await _storage.read(key: 'token');
     return token;
   }
 
-  static Future<void> deleteToken() async {
+  static Future<void> deleteToken() async { // BORRA EL TOKEN
     final _storage = FlutterSecureStorage();
     await _storage.delete(key: 'token');
 
@@ -40,7 +42,7 @@ class AuthServices with ChangeNotifier{
 
   
 
-  Future<bool> login( String email, String password ) async {
+  Future<bool> login( String email, String password ) async { //FUNCION DEL LOGIN
 
     autenticando = true;
 
@@ -49,7 +51,7 @@ class AuthServices with ChangeNotifier{
       'password': password
     };
 
-    final uri = Uri.parse('${Enviroment.apiUrl}/login'); // Posible solucion a error un error
+    final uri = Uri.parse('${Enviroment.apiUrl}/login'); // DEFINIMOS NUESTRA VARIABLE DE ENTORNO COMO URI
 
     final resp = await http.post(uri, 
       body: jsonEncode(data),
@@ -65,18 +67,18 @@ class AuthServices with ChangeNotifier{
       final loginResponse = loginResponseFromJson( resp.body );
       usuario = loginResponse.usuario;
 
-      await _guardarToken(loginResponse.token);
+      await _guardarToken(loginResponse.token); //GUARDA EL TOKEN UNA VEZ LOGEADO
 
       return true;
 
     } else {
-
+      
       return false;
     }
     
   }
 
-  Future register(String nombre, String email, String password ) async {
+  Future register(String nombre, String email, String password ) async { //FUNCION DEL REGISTRO
 
     autenticando = false;
 
@@ -86,7 +88,7 @@ class AuthServices with ChangeNotifier{
       'password': password
     };
 
-    final uri = Uri.parse('${Enviroment.apiUrl}/login/new'); // Posible solucion a error un error
+    final uri = Uri.parse('${Enviroment.apiUrl}/login/new');  
 
     final resp = await http.post(uri, 
       body: jsonEncode(data),
@@ -102,7 +104,7 @@ class AuthServices with ChangeNotifier{
       final loginResponse = loginResponseFromJson( resp.body );
       usuario = loginResponse.usuario;
 
-      await _guardarToken(loginResponse.token);
+      await _guardarToken(loginResponse.token); // GUARDA EL TOKEN UNA VEZ REGISTRADO
 
       return true;
 
@@ -114,11 +116,11 @@ class AuthServices with ChangeNotifier{
     }
   }
 
-  Future<bool> isLoggedIn() async {
+  Future<bool> isLoggedIn() async { // FUNCION PARA RENOVAR EL TOKEN CUANDO EL USUARIO ABRE LA APP
 
     final token = await _storage.read(key: 'token') ?? '';
 
-    final uri = Uri.parse('${Enviroment.apiUrl}/login/renew'); // Posible solucion a error un error
+    final uri = Uri.parse('${Enviroment.apiUrl}/login/renew'); 
     final resp = await http.get(uri, 
       headers: {
         'Content-Type': 'application/json',
@@ -130,7 +132,7 @@ class AuthServices with ChangeNotifier{
       final loginResponse = loginResponseFromJson( resp.body );
       usuario = loginResponse.usuario;
 
-      await _guardarToken(loginResponse.token);
+      await _guardarToken(loginResponse.token); // GUARDA EL NUEVO TOKEN REVONADO
 
       return true;
 
@@ -141,14 +143,13 @@ class AuthServices with ChangeNotifier{
     
   }
 
-  Future _guardarToken( String token ) async {
+  Future _guardarToken( String token ) async { //GUARDA EL TOKEN
 
     return await _storage.write(key: 'token', value: token );
-    //return await _storage.write(key: 'token', value: token);
 
   }
 
-  Future logout() async {
+  Future logout() async { // BORRA EL TOKEN CUANDO EL USUARIO HACE UN LOGOUT
     
     await _storage.delete(key: 'token');
   }

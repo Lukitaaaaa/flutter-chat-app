@@ -1,4 +1,11 @@
+// WIDGET DEL MENSAJE
+// UN MENSAJE TIENE QUE CONTENER UN TEXTO, UN UID Y UNA ANIMACION
+
 import 'package:flutter/material.dart';
+
+import 'package:provider/provider.dart';
+
+import 'package:chat_app/services/auth_service.dart';
 
 class ChatMessage extends StatelessWidget {
   
@@ -17,38 +24,41 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final authServices = Provider.of<AuthServices>(context, listen: false);
+
     return FadeTransition(
       opacity: animationController,
       child: SizeTransition(
         sizeFactor: CurvedAnimation(parent: animationController, curve: Curves.easeOut),
         child: Container(
-          child: uid == '123'
-          ? _myMessage()
-          : _notMyMessage(),
+          child: uid == authServices.usuario!.uid // SI EL UID ES IGUAL AL USUARIO LOGEADO
+          ? _myMessage() // ENVIARE UN MENSAJE CON ESTE DISEÑO
+          : _notMyMessage(), // DE LO CONTRARIO ENVIARE UN MENSAJE CON ESTE DISEÑO
         ),
       ),
     );
   }
-  Widget _myMessage(){
+  Widget _myMessage(){ // DISEÑO DEL MENSAGE QUE ENVIA EL USUARIO A OTRO
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
-        padding: EdgeInsets.all(8.0),
-        margin: EdgeInsets.only(
+        padding: const EdgeInsets.all(8.0),
+        margin:  const EdgeInsets.only(
           bottom: 5,
           left: 50,
           right: 5,
         ),
-        child: Text( texto, style: TextStyle(color: Colors.white), ),
         decoration: BoxDecoration(
-          color: Color(0xff4D9EF6),
+          color: const Color(0xff4D9EF6),
           borderRadius: BorderRadius.circular(20)
         ),
+        child: Text( texto, style: const TextStyle(color: Colors.white), ),
       ),
     );
   }
 
-  Widget _notMyMessage(){
+  Widget _notMyMessage(){ // DISEÑO DEL MENSAGE QUE RECIBE EL USUARIO
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
@@ -58,12 +68,11 @@ class ChatMessage extends StatelessWidget {
           left: 5,
           right: 50,
         ),
-        child: Text( texto, style: TextStyle(color: Colors.black), ),
         decoration: BoxDecoration(
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              offset: Offset(0, 5),
+              offset: const Offset(0, 5),
               blurRadius: 5
             )
           ],
@@ -71,6 +80,7 @@ class ChatMessage extends StatelessWidget {
           borderRadius: BorderRadius.circular(20)
           
         ),
+        child: Text( texto, style: const TextStyle(color: Colors.black), ),
       ),
     );
   }

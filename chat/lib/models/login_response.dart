@@ -2,6 +2,9 @@
 //
 //     final loginResponse = loginResponseFromJson(jsonString);
 
+// MODELO DEL LOGIN
+// TIENE QUE TENER UN ESTADO DE CONEXION, UN USUARIO Y UN TOKEN
+
 import 'dart:convert';
 
 import 'package:chat_app/models/usuario.dart';

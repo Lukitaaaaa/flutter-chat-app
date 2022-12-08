@@ -1,3 +1,7 @@
+// TEXTFIELDS DONDE SE INTRODUCEN LA INFORMACION DEL USUARIO
+// TIENEN QUE TENER UN ICONO, UN NOMBRE O REFERENCIA(PLACEHOLDER) Y UN CONTROLADOR
+// TAMBIEN PUEDE CONTENER CONFIGURACIONES OPCIONALES COMO EL TIPO DE TECLADO O LA FORMA DE MOSTRAR LOS CARACTERES
+
 import 'package:flutter/material.dart';
 
 class CustomInput extends StatelessWidget {
@@ -14,22 +18,22 @@ class CustomInput extends StatelessWidget {
     required this.icon,
     required this.placeholder,
     required this.textController,
-    this.keyboardType = TextInputType.text,
+    this.keyboardType = TextInputType.text, 
     this.isPassword = false,
   }): super(key: key);
   
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 5, left: 5, bottom: 5, right: 20),
-      margin: EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(top: 5, left: 5, bottom: 5, right: 20),
+      margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(30),
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            offset: Offset(0, 5),
+            offset: const Offset(0, 5),
             blurRadius: 5
           ),
         ]

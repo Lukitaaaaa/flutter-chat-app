@@ -2,6 +2,9 @@
 //
 //     final usuario = usuarioFromJson(jsonString);
 
+// MODELO DEL USUARIO HECHO EN QUICKTYPE
+// TIENEN QUE TENER UN NOMBRE, UN EMAIL, EL ESTADO DE CONEXION Y UN UID
+
 import 'dart:convert';
 
 Usuario usuarioFromJson(String str) => Usuario.fromJson(json.decode(str));

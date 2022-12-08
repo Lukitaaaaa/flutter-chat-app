@@ -1,3 +1,6 @@
+// BOTON DE INGRESAR O CREAR UNA CUENTA
+// ESTE BOTON TIENE QUE TENER UN TEXTO Y UNA FUNCION
+
 import 'package:flutter/material.dart';
 
 class BotonIngresar extends StatelessWidget {
@@ -17,13 +20,13 @@ class BotonIngresar extends StatelessWidget {
       elevation: 2,
       highlightElevation: 5,
       color: Colors.blue,
-      shape: StadiumBorder(),
+      shape: const StadiumBorder(),
       onPressed: onPressed,
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         height: 55,
         child: Center(
-          child: Text( this.text,style: TextStyle( color: Colors.white, fontSize: 17 )),
+          child: Text( text, style: const TextStyle( color: Colors.white, fontSize: 17 )),
         ),
       ),
     );

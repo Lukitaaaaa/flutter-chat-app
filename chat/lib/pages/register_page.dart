@@ -1,3 +1,8 @@
+// PANTALLA DE REGISTRO
+// CONTIENE UN LOGO, UN FORMULARIO Y LOS LABELS
+
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -5,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:chat_app/helpers/mostrar_alerta.dart';
 
 import 'package:chat_app/services/auth_service.dart';
+import 'package:chat_app/services/socket_services.dart';
 
 import 'package:chat_app/widgets/logo.dart';
 import 'package:chat_app/widgets/custom_input.dart';
@@ -17,22 +23,22 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF2F2F2),
+      backgroundColor: const Color(0xffF2F2F2),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: SafeArea(
           child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Container(
+            physics: const BouncingScrollPhysics(),
+            child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.9,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Logo(titulo: 'Register',),
+                children: const [
+                  Logo(titulo: 'Register'),
                   
                   _Form(),
                   
-                  Label(ruta: 'login', titulo: 'Ya tienes cuenta?', subtitulo: 'Ingresa ahora',),
+                  Label(ruta: 'login', titulo: 'Ya tienes cuenta?', subtitulo: 'Ingresa ahora'),
                   
                   Text('Termino y condiciones de uso', style: TextStyle(fontWeight: FontWeight.w200)),
                 ],
@@ -55,23 +61,24 @@ class _Form extends StatefulWidget {
 
 class __FormState extends State<_Form> {
 
-  final emailCtrl  = TextEditingController();
-  final passCtrl   = TextEditingController();
-  final nombreCtrl = TextEditingController();
+  final emailCtrl  = TextEditingController(); // CONTROLADOR PARA GUARDAR EL TEXTO ESCRITO EN EL CAMPO DEL EMAIL
+  final passCtrl   = TextEditingController(); // CONTROLADOR PARA GUARDAR EL TEXTO ESCRITO EN EL CAMPO DEL CONTRASEÑA
+  final nombreCtrl = TextEditingController(); // CONTROLADOR PARA GUARDAR EL TEXTO ESCRITO EN EL CAMPO DEL NOMBRE
   
 
   @override
   Widget build(BuildContext context) {
 
     final authServices = Provider.of<AuthServices>(context);
+    final socketServices = Provider.of<SocketService>(context);
     
     return Container(
-      margin: EdgeInsets.only(top: 40),
-      padding: EdgeInsets.symmetric(horizontal: 50),
+      margin: const EdgeInsets.only(top: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: [
 
-          CustomInput(
+          CustomInput( // CAMPO DEL NOMBRE
             icon: Icons.perm_identity,
             placeholder: 'Nombre',
             keyboardType: TextInputType.text,
@@ -79,7 +86,7 @@ class __FormState extends State<_Form> {
             
           ),
 
-          CustomInput(
+          CustomInput( // CAMPO DEL CORREO
             icon: Icons.mail_outline,
             placeholder: 'Correo',
             keyboardType: TextInputType.emailAddress, 
@@ -87,14 +94,14 @@ class __FormState extends State<_Form> {
           
           ),
 
-          CustomInput(
+          CustomInput( // CAMPO DE LA CONTRASEÑA
             icon: Icons.lock_outline,
             placeholder: 'Contraseña',
             textController: passCtrl,
             isPassword: true,
           ),
 
-          BotonIngresar(
+          BotonIngresar( // BOTON PARA INGRESAR A LA PANTALLA DE USUARIOS
             text: 'Crear cuenta', 
             onPressed: authServices.autenticando 
             ? () => {} 
@@ -102,16 +109,17 @@ class __FormState extends State<_Form> {
 
 
 
-              FocusScope.of(context).unfocus(); // Oculta el teclado
+              FocusScope.of(context).unfocus(); // CON ESTO OCULTAMOS EL TECLADO
 
               final registerOk = await authServices.register(nombreCtrl.text.trim(), emailCtrl.text.trim(), passCtrl.text.trim() );
 
-              if ( registerOk == true ) {
-                
-                Navigator.pushReplacementNamed(context, 'usuarios');
+              if ( registerOk == true ) { // SI EL REGISTRO ESTA CORRECTO
+
+                socketServices.connect(); // SE CONECTA AL SERVER
+                Navigator.pushReplacementNamed(context, 'usuarios'); // SE DIRIJE A LA PANTALLA DE USUARIOS
               } else {
                 
-                mostrarAlerta(context, 'registro incorrecto', registerOk);
+                mostrarAlerta(context, 'registro incorrecto', registerOk); // DE LO CONTRARIO SE MUESTRA ESTA ALERTA
 
               }           
             

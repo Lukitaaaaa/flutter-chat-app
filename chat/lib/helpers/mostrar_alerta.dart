@@ -1,3 +1,6 @@
+// ALERTA DE ERROR EN ADROID Y EN IOS
+// TIENE COMO ARGUMENTOS UN CONTEXT, UN TITULO Y SUBTIUTLO
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 
 mostrarAlerta(BuildContext context, String titulo, String subtitulo){
 
-  if ( Platform.isAndroid ){
+  if ( Platform.isAndroid ){ 
 
     return showDialog(
       context: context, 
@@ -17,7 +20,7 @@ mostrarAlerta(BuildContext context, String titulo, String subtitulo){
             elevation: 5,
             textColor: Colors.blue,
             onPressed: () => Navigator.pop(context),
-            child: Text('Ok'),
+            child: const Text('Ok'),
           )
         ],
       )
@@ -33,7 +36,7 @@ mostrarAlerta(BuildContext context, String titulo, String subtitulo){
       actions: [
         CupertinoDialogAction(
           isDefaultAction: true,
-          child: Text('Ok'),
+          child: const Text('Ok'),
           onPressed: ()=> Navigator.pop(context),
         ),
 
